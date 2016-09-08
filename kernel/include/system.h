@@ -21,7 +21,7 @@
 #endif
    typedef int16_t intptr_t;
    typedef uint16_t uintptr_t;
-#endif
+#endif /* INT_TYPES */
 
 
 void kprintf(char *, ...);
