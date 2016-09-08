@@ -16,11 +16,6 @@
 .global _start
 _start:
 
-	/* Reset Registers */
-	xor %eax, %eax
-	mov %eax, %ecx
-	mov %eax, %edx
-	
 	/* Initialize kernel stack */
 	mov $k_stack, %esp
 
