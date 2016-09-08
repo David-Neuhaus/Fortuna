@@ -1,10 +1,8 @@
 .section .text
 
-/* ------------------------------------------------------------------------ *
- *									    *
- * Die Funktion, um die GDT zu laden.					    *
- *									    *
- * ------------------------------------------------------------------------ */
+/* 
+ * The functions to load the GDT table.
+ */
 
 .global loadgdt
 
@@ -19,11 +17,9 @@ loadgdt:
 .1:
 	ret
 
-/* ----------------------------------------------------------------------- *
- *									   *
- * Die Einträge der IDT.						   *
- *									   *
- * ----------------------------------------------------------------------- */
+/* 
+ * Macros for interruuption stubs.
+ */
 
 .macro intr_stub nr
 .global intr_stub_\nr
@@ -82,9 +78,14 @@ intr_stub 47
 /* Syscall */
 intr_stub 48
 
+/*
+ * Save the registers, load the kernel data segments and call the handlers in the IDT.
+ * After that return to the (user space?) program.
+ */
+
 .extern handle_interrupt
 intr_common_handler:
-	//CPU - Zustand sichern
+
 	push %ebp
 	push %edi
 	push %esi
@@ -93,22 +94,18 @@ intr_common_handler:
 	push %ebx
 	push %eax
 	
-	//Kernel-Datensegmente laden
 	mov $0x10, %ax
 	mov %eax, %ds
 	mov %eax, %es
 
-	//Handler aufrufen
 	push %esp
 	call handle_interrupt
 	mov %eax, %esp
 	
-	//User-Datensegmente laden
 	mov $0x23, %ax
 	mov %ax, %ds
 	mov %ax, %es
 
-	//CPU - Zustand wiederherstellen
 	pop %eax
 	pop %ebx
 	pop %ecx
@@ -117,8 +114,7 @@ intr_common_handler:
 	pop %edi
 	pop %ebp
 
-	//Fehlercode und Interruptnummer vom Stack nehmen
+	/* Fetch error code from the stack */
 	add $8, %esp
 	
-	//Return
 	iret

@@ -64,7 +64,7 @@ void kprintf(char *in, ...){
 					for(index=0;out[index]!='\0' && index<151; index++){
 						vid[(y*80+x)*2] = out[index];
 						vid[(y*80+x)*2+1] = 0x07;
-						//outb(0x03f8, out[index]); //serielle Schnittstelle Emulator
+						//outb(0x03f8, out[index]); //serial interface emulator
 						if(x!=80)
 							x++;
 						else{
@@ -84,7 +84,7 @@ void kprintf(char *in, ...){
 					for(index=0;out[index]!='\0' && index<151; index++){
 						vid[(y*80+x)*2] = out[index];
 						vid[(y*80+x)*2+1] = 0x07;
-						//outb(0x03f8, out[index]); //serielle Schnittstelle Emulator
+						//outb(0x03f8, out[index]); //serial interface emulator
 						if(x!=80)
                                                         x++;
                                                 else{
@@ -102,7 +102,7 @@ void kprintf(char *in, ...){
 					for(index=0;out[index]!='\0'; index++){
                                                 vid[(y*80+x)*2] = out[index];
                                                 vid[(y*80+x)*2+1] = 0x07;
-                                                //outb(0x03f8, out[index]); //serielle Schnittstelle Emulator
+                                                //outb(0x03f8, out[index]); //serial interface emulator
                                                 if(x!=80)
                                                         x++;
                                                 else{   
@@ -121,7 +121,7 @@ void kprintf(char *in, ...){
 			} else {
 				vid[(y*80+x)*2] = in[i];
 				vid[(y*80+x)*2+1] = 0x07;
-				//outb(0x03f8, out[index]); //serielle Schnittstelle Emulator
+				//outb(0x03f8, out[index]); //serial interface emulator
 				x++;
 			}
 			

@@ -46,6 +46,6 @@ static void load_gdt(void){
 	asm volatile("lgdt %0" : : "m" (gdtp));
 	loadgdt();
 	
-	//TSS Register laden
+	//Load TSL registers
 	asm volatile("ltr %%ax" : : "a" (5 << 3));
 }

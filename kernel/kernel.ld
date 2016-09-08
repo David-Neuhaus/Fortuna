@@ -1,21 +1,18 @@
-/*  Bei _start soll die Ausfuehrung losgehen */
+/*  Start at _start (in start.S) */
 ENTRY(_start)
 
 /*
- * Hier wird festgelegt, in welcher Reihenfolge welche Sektionen in die Binary
- * geschrieben werden sollen
+ * Specify the order of the sections in the exectubale.
  */
 SECTIONS
 {
     /*
-     * . ist die aktuelle Position in der Datei. Wir wollen den Kernel wie gehabt
-     * an 1 MB laden, also muessen wir dort die erste Sektion hinlegen
+     * Put the kernel at 1 MiB.
      */
     . = 0x100000;
 
     /*
-     * Der Multiboot-Header muss zuerst kommen (in den ersten 8 kB).
-     * Die Standardsektionen einfach hintereinander weg einbinden.
+     * The multiboot header has to be first. The standart segments come next.
      */
     .text : {
         *(multiboot)
