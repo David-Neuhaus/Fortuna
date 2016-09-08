@@ -1,0 +1,13 @@
+# Ignore following files
+*.o
+*.a
+*.bz2
+*.tar
+*.gz
+.*
+
+# Git configuration files:
+!.gitignore
+!.project
+!.cproject
+!.settings
