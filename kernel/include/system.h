@@ -1,5 +1,5 @@
-#ifndef SYSTEMH
-#define SYSTEMH
+#ifndef SYSTEM_H
+#define SYSTEM_H
 
 #ifndef INT_TYPES
    #define INT_TYPES
@@ -35,12 +35,12 @@ uint8_t *memset(uint8_t *dest, uint8_t val, int count);
 uint16_t *memsetw(uint16_t *dest, uint16_t val, int count);
 int strlen(const char *str);
 #ifndef __OUTB
-#define __OUTB
-void outb(uint16_t port, uint8_t data);
+	#define __OUTB
+	void outb(uint16_t port, uint8_t data);
 #endif
 #ifndef __INB
-uint8_t inb(uint16_t port);
-#define __INB
+	#define __INB
+	uint8_t inb(uint16_t port);
 #endif
 
 struct cpu_state* init_task(uint8_t* stack, uint8_t* user_stack, void* entry);
@@ -130,4 +130,4 @@ struct mb_mod_entry {
 };
 
 typedef struct mb_mod_entry mb_mod_entry_t;
-#endif
+#endif /* SYSTEM_H */
