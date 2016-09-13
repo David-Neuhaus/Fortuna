@@ -27,11 +27,8 @@ new_header_start:
 /* tags */
 
 /* End tag */
-.align 2
 .word 0 /* type */
 .word 0 /* flags */
-
-.align 4
 .int 8 /* size */
 
 /* End tag end */
@@ -42,11 +39,26 @@ new_header_end:
 .extern init
 
 .global _start
+
+.align 4
+
 _start:
 
 	/* Initialize kernel stack */
-	mov $k_stack, %esp
+	movl $k_stack, %esp
+	
+	/* Check version of multiboot */
+	movl $0x36d76289, %ecx
+	cmp %eax, %ecx
+	je 1f
 
+	#define MB_old
+	jmp 2f
+
+	1:
+	#define MB_new
+	
+	2:
 	/* Call init() in kernel/init.c */
 	push %ebx
 	call init
