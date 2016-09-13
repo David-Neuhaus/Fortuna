@@ -1,4 +1,4 @@
-.section multiboot
+.section multiboot_old
 
 #define MBH_MAGIC 0x1badb002
 #define MBH_FLAGS 0x0
@@ -8,6 +8,34 @@
 .int MBH_MAGIC
 .int MBH_FLAGS
 .int MBH_CHECKSUM
+
+.section multiboot_new
+
+new_header_start:
+
+#define MBHn_MAGIC 0xE85250D6
+#define MBHn_ARCH 0
+#define MBHn_HEADER_LENGTH (new_header_end - new_header_start)
+#define MBHn_CHECKSUM -(MBHn_MAGIC + MBHn_ARCH + MBHn_HEADER_LENGTH)
+
+.align 8
+.int MBHn_MAGIC
+.int MBHn_ARCH
+.int MBHn_HEADER_LENGTH
+.int MBHn_CHECKSUM
+
+/* tags */
+
+/* End tag */
+.align 2
+.word 0 /* type */
+.word 0 /* flags */
+
+.align 4
+.int 8 /* size */
+
+/* End tag end */
+new_header_end:
 
 .section .text
 

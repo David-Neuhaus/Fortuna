@@ -12,10 +12,13 @@ SECTIONS
     . = 0x100000;
 
     /*
-     * The multiboot header has to be first. The standart segments come next.
+     * The multiboot header has to be first. We put the new version before
+     * the old to make sure that the right one is used.
+     * The standart segments come next.
      */
     .text : {
-        *(multiboot)
+        *(multiboot_new)
+	*(multiboot_old)
         *(.text)
     }
     .data ALIGN(4096) : {
