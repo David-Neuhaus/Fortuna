@@ -10,6 +10,8 @@ SECTIONS
      * Put the kernel at 1 MiB.
      */
     . = 0x100000;
+    
+    ld_kernel_start = . ;
 
     /*
      * The multiboot header has to be first. We put the new version before
@@ -18,7 +20,7 @@ SECTIONS
      */
     .text : {
         *(multiboot_new)
-	*(multiboot_old)
+	    *(multiboot_old)
         *(.text)
     }
     .data ALIGN(4096) : {
@@ -30,4 +32,7 @@ SECTIONS
     .bss ALIGN(4096) : {
         *(.bss)
     }
+
+    ld_kernel_end = . ;
+
 }

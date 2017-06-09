@@ -1,8 +1,7 @@
 #include <system.h>
 #include <gdt.h>
 #include <idt.h>
-
-extern void pmm_init(struct multiboot_info *);
+#include <pmm.h>
 
 uint8_t *memcpy(uint8_t *dest, const uint8_t *src, int count){
     int i;
@@ -41,8 +40,12 @@ unsigned inline char inb(uint16_t port){
     return rv;
 }
 
-void init(struct multiboot_info *mb_info){
-    pmm_init(mb_info);
+void init(unsigned long mb_info, unsigned long mn){
+    if(mn == 0xE85250D6)
+        MB_NEW = 1;
+    else
+        MB_OLD = 1;
+    pmm_init((void *) mb_info);
     kterminal_init();
     kprintf("Initialize GDT...\n");
     gdt_init();

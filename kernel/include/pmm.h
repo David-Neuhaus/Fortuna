@@ -6,5 +6,10 @@
 static uint32_t bitmap[BITMAP_SIZE];
 uint8_t* free_mem;
 
+void pmm_set_used(void *, void *);
+void pmm_init(void *);
+void pmm_free(void *);
+void *pmm_alloc(int);
+void pmm_mark_used(int);
 
 #endif

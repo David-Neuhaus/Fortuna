@@ -60,7 +60,8 @@ _start:
 	
 	2:
 	/* Call init() in kernel/init.c */
-	push %ebx
+	pushl %eax
+	pushl %ebx
 	call init
 
 _stop:
