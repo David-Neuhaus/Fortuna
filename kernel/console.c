@@ -59,6 +59,7 @@ int kprintf(char *in, ...){
                     h  = va_arg(args,int);
                     char out[digitnum(h)+1];
                     itoa(h, out, 10);
+                    index = 0;
                     while(out[index]){
                         kputchar(*out);
                         index++;
@@ -69,6 +70,7 @@ int kprintf(char *in, ...){
                     h = va_arg(args,int);
                     char out[digitnum(h)+1];
                     itoa(h, out, 16);
+                    index = 0;
                     while(out[index]){
                         kputchar(*out);
                         index++;

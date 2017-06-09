@@ -23,19 +23,6 @@
     typedef uint16_t uintptr_t;
 #endif /* INT_TYPES */
 
-/* kernel console functions */
-#ifndef KCONSOLE_FUNCTIONS
-#define KCONSOLE_FUNCTIONS
-    int kprintf(char *, ...);
-    void kterminal_setCursor(int col, int row);
-    void kterminal_init(void);
-    void kterminal_setColor(uint8_t color);
-    int kputchar(char c);
-    int kputs(char *);
-    void clscr(void);
-    void scroll(void);
-#endif /* KCONSOLE_FUNCTIONS */
-
 /* textmode color constants */
 enum vga_color {
     VGA_COLOR_BLACK = 0,
@@ -54,6 +41,22 @@ enum vga_color {
     VGA_COLOR_LIGHT_BROWN = 14,
     VGA_COLOR_WHITE = 15,
 };
+
+/* kernel console functions */
+#ifndef KCONSOLE_FUNCTIONS
+#define KCONSOLE_FUNCTIONS
+    int kprintf(char *, ...);
+    void kterminal_setCursor(int col, int row);
+    void kterminal_init(void);
+    void kterminal_setColor(uint8_t color);
+    void kputentryat(char c, uint8_t color, int column, int row);
+    int kputchar(char c);
+    int kputs(char *);
+    uint8_t vga_entry_color(enum vga_color, enum vga_color);
+    uint16_t vga_entry(unsigned char c, uint8_t color);
+    void clscr(void);
+    void scroll(void);
+#endif /* KCONSOLE_FUNCTIONS */
 
 /* type converting */
 #ifndef TYPE_CONVERTING
