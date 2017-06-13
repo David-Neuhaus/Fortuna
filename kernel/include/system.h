@@ -27,7 +27,18 @@ int MB_NEW = 0;
     typedef unsigned long int uintptr_t;
 #endif /* INT_TYPES */
 
+#ifndef SIZE_T
+#define SIZE_T
+#if __WORDSIZE == 64
+    typedef unsigned long long int  size_t;
+#else
+    typedef unsigned long int        size_t;
+#endif
+#endif /* SIZE_T */
+
 /* textmode color constants */
+#ifndef VGA_CONST
+#define VGA_CONST
 enum vga_color {
     VGA_COLOR_BLACK = 0,
     VGA_COLOR_BLUE = 1,
@@ -45,6 +56,7 @@ enum vga_color {
     VGA_COLOR_LIGHT_BROWN = 14,
     VGA_COLOR_WHITE = 15,
 };
+#endif /* VGA_CONST */
 
 /* kernel console functions */
 #ifndef KCONSOLE_FUNCTIONS
@@ -71,8 +83,10 @@ enum vga_color {
     int itoax(int, char *);
     int itoa(int, char *, int);
     int digitnum(int);
-#endif
+#endif /* TYPE_CONVERTING */
 
+#ifndef STRING_FUNCTIONS
+#define STRING_FUNCTIONS
 /* memory functions */
     uint8_t *memcpy(uint8_t *dest, const uint8_t *src, int count);
     uint8_t *memset(uint8_t *dest, uint8_t val, int count);
@@ -80,6 +94,8 @@ enum vga_color {
 
 /* string manipulating */
     int strlen(const char *str);
+
+#endif /* STRING_FUNCTIONS */
 
 /* port functions */
 #ifndef __OUTB
@@ -118,6 +134,9 @@ struct cpu_state {
     uint32_t   ss;
 };
 
+
+#ifndef MULTIBOOT
+#define MULTIBOOT
 /* Old Multiboot */
 
     struct mb_aout {
@@ -228,7 +247,7 @@ struct cpu_state {
         uint32_t size;
         uint32_t entry_size;
         uint32_t entry_version;
-        struct mb_mmap_entry entries[0];
+        struct mb2_mmap_entry entries[0];
     } __attribute__((aligned(8)));
 
     struct mb2_boot_loader_name {
@@ -310,5 +329,6 @@ struct cpu_state {
         struct mb2_vbe_info mb2_vbe_info;
         struct mb2_framebuffer_info mb2_framebuffer;
     } __attribute__((aligned(8)));
+#endif /* MULTIBOOT */
 
 #endif /* SYSTEM_H */

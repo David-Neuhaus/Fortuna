@@ -2,7 +2,7 @@
 #include <pmm.h>
 
 static unsigned int base;
-extern uint32_t ld_kernel_start, ld_kernel_end;
+extern const void ld_kernel_start, ld_kernel_end;
 
 void pmm_set_used(void *start, void *end){
     
@@ -11,6 +11,9 @@ void pmm_set_used(void *start, void *end){
 }
 
 void pmm_init(void *mb_info_ptr){
+
+    size_t free_memory = 0;
+
 if(MB_OLD){
     
     struct multiboot_info *mb_info = (struct multiboot_info *) mb_info_ptr;
@@ -20,15 +23,16 @@ if(MB_OLD){
         return; //TODO error management
     }
 
-	struct mb_mmap_entry *mmap = &(mb_info->mbs_mmap_addr);
+	struct mb_mmap_entry *mmap = (struct mb_mmap_entry *) mb_info->mbs_mmap_addr;
 	struct mb_mmap_entry *mmap_end = (struct mb_mmap_entry *) ((uintptr_t) mmap + mb_info->mbs_mmap_length);
-	
 
 	while(mmap < mmap_end) {
 				
 		if(mmap->type == 1){
 			uintptr_t addr = mmap->baseAddr;
 			uintptr_t end_addr = mmap->length + addr;
+            
+            free_memory += (size_t) end_addr - addr;
 
 			while(addr < end_addr) {
 				pmm_free((void*) addr);
@@ -50,7 +54,7 @@ if(MB_NEW){
     
     uint32_t entry_size = (mb_info->mb2_mmap).entry_size;
 
-    struct mb2_mmap_entry *mmap = &((mb_info->mb2_mmap).entries);
+    struct mb2_mmap_entry *mmap = (mb_info->mb2_mmap).entries;
     struct mb2_mmap_entry *mmap_end = (struct mb2_mmap_entry *) ((uintptr_t) mmap + (mb_info->mb2_mmap).size);
     
 
@@ -59,7 +63,9 @@ if(MB_NEW){
         if(mmap->type == 1){
             uintptr_t addr = (uintptr_t) mmap->base_addr;
             uintptr_t end_addr = (uintptr_t) mmap->length + addr;
-            
+         
+            free_memory += (size_t) end_addr - addr;
+
             while(addr < end_addr) {
                 pmm_free((void *) addr);
                 addr++;
@@ -70,18 +76,21 @@ if(MB_NEW){
 }
 
     /* Kernel als belegt markieren */
-    pmm_set_used(&ld_kernel_start, &ld_kernel_end);
+    void *kernel_start = &ld_kernel_start;
+    void *kernel_end = &ld_kernel_end;
+    pmm_set_used(kernel_start, kernel_end);
     
+    free_memory -= (size_t) kernel_end - (size_t) kernel_start;
 
     /* Array für freien Speicher */
-    free_mem = pmm_alloc(1);
+    free_mem = pmm_alloc(free_memory);
 }
 
 void pmm_mark_used(int num){
 
 }
 
-void* pmm_alloc(int bytes){
+void *pmm_alloc(size_t bytes){
 	
 	int i=0;
 	for(i=0;i<2;i++){
@@ -90,15 +99,15 @@ void* pmm_alloc(int bytes){
 			for(i2=0; i2<32; i2++){
 				if(bitmap[i] & (1 << i2)){
 					pmm_mark_used((i*32)+i2);
-					return (uint8_t*) (base + 4096*((i*32) + i2));
+					return (void *) (base + 4096*((i*32) + i2));
 				}
 			}
 			
 		}
 	}  
 	
-	uint8_t* addr;	
-	addr = free_mem[0];
+	void *addr;	
+	addr = (void *) free_mem[0];
 	free_mem = &free_mem[1];
 	
 	
