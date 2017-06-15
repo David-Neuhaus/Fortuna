@@ -1,13 +1,7 @@
-# Ignore following files
 *.o
+*.d
 *.a
-*.bz2
 *.tar
+*.bz2
 *.gz
-.*
-
-# Git configuration files:
-!.gitignore
-!.project
-!.cproject
-!.settings
+*.xz
