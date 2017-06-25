@@ -1,7 +1,12 @@
-*.o
-*.d
 *.a
 *.tar
 *.bz2
 *.gz
 *.xz
+
+# Files generated along the build process
+sysroot/
+isodir/
+*.o
+*.d
+*.iso
