@@ -6,7 +6,6 @@
 #define MBH_FLAGS (MBH_ALIGN | MBH_MEMINFO)
 #define MBH_CHECKSUM -(MBH_MAGIC+MBH_FLAGS)
 
-.align 4
 .int MBH_MAGIC
 .int MBH_FLAGS
 .int MBH_CHECKSUM
@@ -18,9 +17,8 @@ new_header_start:
 #define MBHn_MAGIC 0xE85250D6
 #define MBHn_ARCH 0
 #define MBHn_HEADER_LENGTH (new_header_end - new_header_start)
-#define MBHn_CHECKSUM -(MBHn_MAGIC + MBHn_ARCH + MBHn_HEADER_LENGTH)
+#define MBHn_CHECKSUM (0x100000000 -(MBHn_MAGIC + MBHn_ARCH + MBHn_HEADER_LENGTH))
 
-.align 8
 .int MBHn_MAGIC
 .int MBHn_ARCH
 .int MBHn_HEADER_LENGTH

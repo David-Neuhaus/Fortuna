@@ -17,8 +17,9 @@ void init(unsigned long mb_info, unsigned long mn){
         MB_NEW = 1;
     else
         MB_OLD = 1;
-    pmm_init((void *) mb_info);
+    
     kterminal_init();
+    pmm_init((void *) mb_info);
     printf("Initialize GDT...\n");
     gdt_init();
     printf("finished.\nInitialize IDT...\n");

@@ -5,9 +5,7 @@
 
 #include "cpu.h"
 
-struct cpu_state* handle_interrupt(struct cpu_state* cpu){
-	
-	struct cpu_state* new_cpu = cpu;
+struct cpu_state* handle_exception(struct cpu_state* cpu){
 
 	if(cpu->intr < 0x20){
 		printf("%s, Kernel stopped!\n", err_msg[cpu->intr]);
@@ -15,22 +13,43 @@ struct cpu_state* handle_interrupt(struct cpu_state* cpu){
 		while(1)
 			asm volatile("cli; hlt");
 	} 
-	
-	else if(cpu->intr >= 0x20 && cpu->intr <= 0x2f){
-		
+
+    return cpu;
+}
+
+static void (*irq_handlers[16])(void*);
+
+struct cpu_state* handle_irq(struct cpu_state* cpu){
+
+	struct cpu_state* new_cpu = cpu;
+	if(cpu->intr >= 0x20 && cpu->intr <= 0x2f){
+
+        if(irq_handlers[cpu->intr - 0x20])
+            irq_handlers[cpu->intr - 0x20]((void*) cpu);
+
+        /*
 		if(cpu->intr == 0x20) {
 			new_cpu = schedule(cpu);
 			tss[1] = (uint32_t) (new_cpu + 1);
-		} 
+		} */ 
 		
-		if(cpu->intr >= 0x28) {
+		if(cpu->intr >= 0x28){
 		        outb(0xa0, 0x20);
-    		}
-    		
+    	}
+    	
 		outb(0x20, 0x20);
 		
 		printf("Interrupt: %s", err_msg[cpu->intr]);
 	}
 	
 	return new_cpu;
+}
+
+void set_irq_handler(int num, void (*func)(void *cpu)){
+    if(num<16 && func)
+        irq_handlers[num] = func;
+}
+
+struct cpu_state* handle_sys(struct cpu_state* cpu){
+    return cpu;
 }

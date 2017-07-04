@@ -6,7 +6,6 @@
 
 static unsigned int base;
 extern const void* ld_kernel_start, ld_kernel_end;
-extern int MB_OLD, MB_NEW;
 
 void pmm_set_used(void *start, void *end){
     
@@ -18,66 +17,66 @@ void pmm_init(void *mb_info_ptr){
 
     size_t free_memory = 0;
 
-if(MB_OLD){
-    
-    struct multiboot_info *mb_info = (struct multiboot_info *) mb_info_ptr;
+    if(MB_OLD){
+        
+        struct multiboot_info *mb_info = (struct multiboot_info *) mb_info_ptr;
 
-    if(!(mb_info->mbs_flags & (1 << 6))){
-        printf("Keine gültige memory map.\n");
-        return; //TODO error management
-    }
-
-	struct mb_mmap_entry *mmap = (struct mb_mmap_entry *) mb_info->mbs_mmap_addr;
-	struct mb_mmap_entry *mmap_end = (struct mb_mmap_entry *) ((uintptr_t) mmap + mb_info->mbs_mmap_length);
-
-	while(mmap < mmap_end) {
-				
-		if(mmap->type == 1){
-			uintptr_t addr = mmap->baseAddr;
-			uintptr_t end_addr = mmap->length + addr;
-            
-            free_memory += (size_t) end_addr - addr;
-
-			while(addr < end_addr) {
-				pmm_free((void*) addr);
-				addr++;
-			}
-		}
-		mmap += mmap->size + 4;
-	} 
-}
-
-if(MB_NEW){
-    
-    struct multiboot_info_v2 *mb_info = (struct multiboot_info_v2 *) mb_info_ptr;
-
-    if((mb_info->mb2_mmap).type != 6){
-        printf("Keine gültige memory map.\n");
-        return; //TODO error management
-    }
-    
-    uint32_t entry_size = (mb_info->mb2_mmap).entry_size;
-
-    struct mb2_mmap_entry *mmap = (mb_info->mb2_mmap).entries;
-    struct mb2_mmap_entry *mmap_end = (struct mb2_mmap_entry *) ((uintptr_t) mmap + (mb_info->mb2_mmap).size);
-    
-
-    while(mmap < mmap_end){
-
-        if(mmap->type == 1){
-            uintptr_t addr = (uintptr_t) mmap->base_addr;
-            uintptr_t end_addr = (uintptr_t) mmap->length + addr;
-         
-            free_memory += (size_t) end_addr - addr;
-
-            while(addr < end_addr) {
-                pmm_free((void *) addr);
-                addr++;
-            }
+        if(!(mb_info->mbs_flags & (1 << 6))){
+            printf("Keine gültige memory map.\n");
+            return; //TODO error management
         }
-        mmap += entry_size;
+
+        struct mb_mmap_entry *mmap = (struct mb_mmap_entry *) mb_info->mbs_mmap_addr;
+        struct mb_mmap_entry *mmap_end = (struct mb_mmap_entry *) ((uintptr_t) mmap + mb_info->mbs_mmap_length);
+
+        while(mmap < mmap_end) {
+                    
+            if(mmap->type == 1){
+                uintptr_t addr = mmap->baseAddr;
+                uintptr_t end_addr = mmap->length + addr;
+                
+                free_memory += (size_t) end_addr - addr;
+
+                while(addr < end_addr) {
+                    pmm_free((void*) addr);
+                    addr++;
+                }
+            }
+            mmap += mmap->size + 4;
+        } 
     }
-}
+
+    if(MB_NEW){
+        
+        struct multiboot_info_v2 *mb_info = (struct multiboot_info_v2 *) mb_info_ptr;
+
+        if((mb_info->mb2_mmap).type != 6){
+            printf("Keine gültige memory map.\n");
+            return; //TODO error management
+        }
+        
+        uint32_t entry_size = (mb_info->mb2_mmap).entry_size;
+
+        struct mb2_mmap_entry *mmap = (mb_info->mb2_mmap).entries;
+        struct mb2_mmap_entry *mmap_end = (struct mb2_mmap_entry *) ((uintptr_t) mmap + (mb_info->mb2_mmap).size);
+        
+
+        while(mmap < mmap_end){
+
+            if(mmap->type == 1){
+                uintptr_t addr = (uintptr_t) mmap->base_addr;
+                uintptr_t end_addr = (uintptr_t) mmap->length + addr;
+             
+                free_memory += (size_t) end_addr - addr;
+
+                while(addr < end_addr) {
+                    pmm_free((void *) addr);
+                    addr++;
+                }
+            }
+            mmap += entry_size;
+        }
+    }
 
     /* Kernel als belegt markieren */
     void *kernel_start = &ld_kernel_start;

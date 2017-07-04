@@ -1,6 +1,8 @@
 #ifndef KERNEL_MULTIBOOT_H
 #define KERNEL_MULTIBOOT_H
 
+extern int MB_OLD, MB_NEW;
+
 /* Old Multiboot */
 
     struct mb_aout {
