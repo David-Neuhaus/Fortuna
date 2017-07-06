@@ -1,7 +1,8 @@
-.. Fortuna documentation master file, created by
-   sphinx-quickstart on Sun Jun 25 23:39:27 2017.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+.. Fortuna documentation
+
+=====================
+Fortuna Documentation
+=====================
 
 Welcome to Fortuna's documentation!
 ===================================
@@ -18,11 +19,3 @@ Welcome to Fortuna's documentation!
    Kernel documentation <kernel/index>
    Driver documentation <driver/index>
 
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
