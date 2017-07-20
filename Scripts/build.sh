@@ -1,5 +1,5 @@
 #!/bin/sh
-set -e
+echo "in build.sh"
 . ./headers.sh
 
 for PROJECT in $PROJECTS; do
