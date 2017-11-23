@@ -10,7 +10,7 @@
 int MB_OLD = 0;
 int MB_NEW = 0;
 
-extern void kernel_main(void);
+void kernel_main(void);
 
 void init(unsigned long mb_info, unsigned long mn){
     if(mn == 0x36d76289)

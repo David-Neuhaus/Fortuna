@@ -24,7 +24,7 @@ loadgdt:
 .macro intr_stub nr
 .global intr_stub_\nr
 intr_stub_\nr:
-	pushl $0x0;
+	pushl $0x0
 	pushl $\nr
 	jmp exception_handler
 .endm
@@ -39,6 +39,7 @@ intr_stub_\nr:
 .macro intr_stub_irq nr
 .global intr_stub_\nr
 intr_stub_\nr:
+	pushl 0x0
 	pushl $\nr
 	jmp irq_handler
 .endm
@@ -46,6 +47,7 @@ intr_stub_\nr:
 .macro intr_stub_sys nr
 .global intr_stub_\nr
 intr_stub_\nr:
+	pushl 0x0
 	pushl $\nr
 	jmp sys_handler
 .endm
@@ -116,9 +118,9 @@ exception_handler:
 	call handle_exception
 	mov %eax, %esp
 	
-	mov $0x23, %ax
-	mov %ax, %ds
-	mov %ax, %es
+	#mov $0x23, %ax
+	#mov %ax, %ds
+	#mov %ax, %es
 
 	pop %eax
 	pop %ebx
@@ -157,9 +159,9 @@ irq_handler:
 	call handle_irq
 	mov %eax, %esp
 	
-	mov $0x23, %ax
-	mov %ax, %ds
-	mov %ax, %es
+	#mov $0x23, %ax
+	#mov %ax, %ds
+	#mov %ax, %es
 
 	pop %eax
 	pop %ebx
