@@ -118,9 +118,9 @@ exception_handler:
 	call handle_exception
 	mov %eax, %esp
 	
-	#mov $0x23, %ax
-	#mov %ax, %ds
-	#mov %ax, %es
+	//mov $0x23, %ax
+	//mov %ax, %ds
+	//mov %ax, %es
 
 	pop %eax
 	pop %ebx
@@ -159,9 +159,9 @@ irq_handler:
 	call handle_irq
 	mov %eax, %esp
 	
-	#mov $0x23, %ax
-	#mov %ax, %ds
-	#mov %ax, %es
+	//mov $0x23, %ax
+	//mov %ax, %ds
+	//mov %ax, %es
 
 	pop %eax
 	pop %ebx
