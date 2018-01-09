@@ -4,6 +4,9 @@
 *.gz
 *.xz
 
+#vim plugin files
+.syntastic_c_config
+
 # Files generated along the build process
 sysroot/
 isodir/
