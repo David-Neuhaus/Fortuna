@@ -1,0 +1,19 @@
+1. pmm Manager fertigstellen
+2. vmm Manager fertigstellen + malloc & free
+3. Upper Kernel
+4. Scheduler schreiben
+5. Keyboard Treiber schreiben
+6. disk driver, filesystem
+7. module load system
+8. TCP/IP Stack
+9. Ethernet Card Treiber
+10. internet services -> auch remote steuerung
+11. more on filesystem
+12. basic console (gui)
+13. verschiedene Treiber (ACPI, PCI, USB, Diskdriver, Ethernet, Wifi, Maus,
+...)
+14. Perfomance Tuning
+15. Verbesserungen am Scheduler
+16. Verbesserungen am Speichermanagement
+17. Verbesserungen am Filesystem
+18. Mal schaun ne ;)
