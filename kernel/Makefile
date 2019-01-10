@@ -8,13 +8,13 @@ LDFLAGS?=
 LIBS?=
 
 DESTDIR?=
-PREFIX?=/usr/local
+PREFIX?=/usr/include
 EXEC_PREFIX?=$(PREFIX)
 BOOTDIR?=$(EXEC_PREFIX)/boot
 INCLUDEDIR?=$(PREFIX)/include
 
 CFLAGS:=$(CFLAGS) -ffreestanding -Wall -Wextra -g
-CPPFLAGS:=$(CPPFLAGS) -D__is_kernel -Iinclude
+CPPFLAGS:=$(CPPFLAGS) -D__is_kernel -Iinclude #-I../libc/include
 LDFLAGS:=$(LDFLAGS)
 LIBS:=$(LIBS) -nostdlib -lk -lgcc
 
