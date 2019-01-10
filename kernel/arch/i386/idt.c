@@ -1,5 +1,4 @@
 #include <kernel/idt.h>
-
 #include <stdint.h>
 #include <stdio.h>
 
@@ -23,7 +22,7 @@ void idt_init(void){
 }
 
 static void init_idt(void){
-	set_entry(0, (uint32_t) intr_stub_0, 0x08, 0x8E);
+    set_entry(0, (uint32_t) intr_stub_0, 0x08, 0x8E);
     set_entry(1, (uint32_t) intr_stub_1, 0x08, 0x8E);
     set_entry(2, (uint32_t) intr_stub_2, 0x08, 0x8E);
     set_entry(3, (uint32_t) intr_stub_3, 0x08, 0x8E);
@@ -58,9 +57,9 @@ static void init_idt(void){
     set_entry(45, (uint32_t) intr_stub_45, 0x08, 0x8E);
     set_entry(46, (uint32_t) intr_stub_46, 0x08, 0x8E);
     set_entry(47, (uint32_t) intr_stub_47, 0x08, 0x8E);
-	set_entry(48, (uint32_t) intr_stub_48, 0x08, 0x8E);
+    set_entry(48, (uint32_t) intr_stub_48, 0x08, 0x8E);
 	
-	load_idt();
+    load_idt();
 }
 
 static void load_idt(void){
@@ -69,9 +68,13 @@ static void load_idt(void){
 		void* pointer;
 	} __attribute__((packed)) idtp = {
 		.limit = IDT_ENTRIES * 8 - 1,
-		.pointer = idt,
+		.pointer = idt
 	};
-	asm volatile("lidt %0" : : "m" (idtp));
+
+	idtp.pointer -= 0xC0000000; //higher kernel, we have to calculate it outside the definition, otherwise gcc optimizes it away somehow
+	printf("idtp at %p\n", (void *) &idtp);
+	printf("idt in pointer at %p and pointing to %p\n", (void *) &(idtp.pointer), (idtp.pointer));
+		asm volatile("lidt %0" : : "m" (idtp));
 }
 
 static void init_pic(void){

@@ -34,25 +34,40 @@ new_header_start:
 /* End tag end */
 new_header_end:
 
+
 /* Kernel entry point */
 .section .text
+
+
+#include <boot/start.h>
 .extern init
+.extern init_gdt
+.extern kernel_main
+
 .global _start
 .type _start, @function
-
 _start:
 
-	/* Initialize kernel stack */
-	movl $k_stack, %esp
+	/* Initialize kernel stack with physical address of k_stack */
+	movl $(k_stack - 0xC0000000), %esp
 	
+	/* Safe multiboot structure */
+	pushl %eax
+	pushl %ebx
+
+	/* Set up GDT so that segments point to higher half kernel */
+	movl $(init_gdt - 0xC0000000), %eax
+	call %eax
+
+
+	/* Call early init() in kernel/arch/i386/init.c */
+	call init
 
 	/* Call global constructors */
 	call _init
 
-	/* Call init() in kernel/init.c */
-	pushl %eax
-	pushl %ebx
-	call init
+	/* Call kernel_main in kernel/main.c*/
+	call kernel_main
 
 _stop:
 
@@ -66,5 +81,5 @@ _stop:
 .section .bss
 .align 16
 //16kiB stack
-.space 0x4000
+.space STACK_SIZE
 k_stack:

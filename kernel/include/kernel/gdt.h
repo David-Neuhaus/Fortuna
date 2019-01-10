@@ -12,5 +12,3 @@
 #define GDT_FLAG_4KGRAN 0x800
 #define GDT_FLAG_32 0x400
 
-void gdt_init(void);
-

@@ -7,9 +7,9 @@ ENTRY(_start)
 SECTIONS
 {
     /*
-     * Put the kernel at 1 MiB.
+     * Put the kernel as Upper Kernel.
      */
-    . = 1M;
+    . = 0xC0100000;
     
     ld_kernel_start = . ;
 
@@ -18,18 +18,18 @@ SECTIONS
      * the new cause grub currently doesn't support multiboot 2.
      * The standart segments come next.
      */
-    .text BLOCK(4K) : ALIGN(4K) {
-	    *(multiboot_old)
+    .text ALIGN(4K) : AT (ADDR (.text) - 0xC0000000) {
+	*(multiboot_old)
         *(multiboot_new)
         *(.text)
     }
-    .data BLOCK(4K) : ALIGN(4K) {
+    .data ALIGN(4K) : AT (ADDR (.data) - 0xC0000000) {
         *(.data)
     }
-    .rodata BLOCK(4K) : ALIGN(4K) {
+    .rodata ALIGN(4K) : AT (ADDR (.rodata) - 0xC0000000){
         *(.rodata)
     }
-    .bss BLOCK(4K) : ALIGN(4K) {
+    .bss ALIGN(4K) : AT (ADDR (.bss) - 0xC0000000) {
         *(COMMON)
         *(.bss)
     }

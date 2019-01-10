@@ -8,7 +8,7 @@ static unsigned int base;
 extern const void* ld_kernel_start, ld_kernel_end;
 
 void pmm_set_used(void *start, void *end){
-    
+    //TODO
     
     
 }
@@ -37,9 +37,9 @@ void pmm_init(void *mb_info_ptr){
                 
                 free_memory += (size_t) end_addr - addr;
 
-                while(addr < end_addr) {
-                    pmm_free((void*) addr);
-                    addr++;
+                while(addr <= (end_addr-4096)) {
+                    //add_mmap((void*) addr);
+                    addr += 4096;
                 }
             }
             mmap += mmap->size + 4;
@@ -82,36 +82,45 @@ void pmm_init(void *mb_info_ptr){
     void *kernel_start = &ld_kernel_start;
     void *kernel_end = &ld_kernel_end;
     pmm_set_used(kernel_start, kernel_end);
+
+    /* Multiboot structure als belegt markieren */
+
+    //TODO
     
     free_memory -= (size_t) kernel_end - (size_t) kernel_start;
 
     /* Array für freien Speicher */
-    free_mem = pmm_alloc(free_memory);
+    //free_mem = pmm_alloc(free_memory);
 }
 
 void pmm_mark_used(int num){
-
+	//TODO
 }
 
 void *pmm_alloc(size_t bytes){
 	
-	int i=0;
-	for(i=0;i<2;i++){
-		if(!(bitmap[i] & 0xFFFFFFFF)){
-			int i2;
-			for(i2=0; i2<32; i2++){
-				if(bitmap[i] & (1 << i2)){
-					pmm_mark_used((i*32)+i2);
-					return (void *) (base + 4096*((i*32) + i2));
+	/* For little memory lookup in the bitmap for quick access */
+	//TODO return right address and amount of memory, think about design
+	if(bytes < 32){
+		int i=0;
+		for(i=0;i<2;i++){
+			if(!(bitmap[i] & 0xFFFFFFFF)){
+				int i2;
+				for(i2=0; i2<32; i2++){
+					if(bitmap[i] & (1 << i2)){
+						pmm_mark_used((i*32)+i2);
+						return (void *) (base + 4096*((i*32) + i2));
+					}
 				}
+				
 			}
-			
-		}
-	}  
+		}  
+	}
 	
+	/* Otherwise use the free memory list */
 	void *addr;	
-	addr = (void *) free_mem[0];
-	free_mem = &free_mem[1];
+	//addr = (void *) free_mem[0];
+	//free_mem = &free_mem[1];
 	
 	
 	return addr;
@@ -120,6 +129,6 @@ void *pmm_alloc(size_t bytes){
 
 void pmm_free(void* addr){
 	
-	
+	//TODO
 	
 }

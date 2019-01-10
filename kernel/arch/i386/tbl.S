@@ -1,24 +1,14 @@
+.section .data
+debtext1:
+.ascii "In tbl.S exception handler\n\0x0"
+
+debtext2:
+.ascii "In tbl.S irq handler\n\0x0"
+
 .section .text
-
+	
 /* 
- * The functions to load the GDT table.
- */
-
-.global loadgdt
-
-loadgdt:
-	mov $0x10, %ax
-	mov %ax, %ds
-	mov %ax, %es
-	mov %ax, %fs
-	mov %ax, %gs
-	mov %ax, %ss
-	ljmp $0x8, $.1
-.1:
-	ret
-
-/* 
- * Macros for interruuption stubs.
+ * Macros for interruption stubs.
  */
 
 .macro intr_stub nr
@@ -98,7 +88,7 @@ intr_stub 48
  * Save the registers, load the kernel data segments and call the exception handler.
  * After that return to the (user space?) program.
  */
-
+.extern printf
 .extern handle_exception
 exception_handler:
 
@@ -110,6 +100,9 @@ exception_handler:
 	push %ebx
 	push %eax
 	
+	push debtext1
+	call printf
+
 	mov $0x10, %ax
 	mov %eax, %ds
 	mov %eax, %es
@@ -151,6 +144,9 @@ irq_handler:
 	push %ebx
 	push %eax
 	
+	push debtext2
+	call printf
+
 	mov $0x10, %ax
 	mov %eax, %ds
 	mov %eax, %es

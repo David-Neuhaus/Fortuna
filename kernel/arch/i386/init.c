@@ -17,11 +17,12 @@ void init(unsigned long mb_info, unsigned long mn){
         MB_NEW = 1;
     else
         MB_OLD = 1;
-    
+    char *test = "abcde";
+    uint32_t t = 0x10105852;
     kterminal_init();
-    pmm_init((void *) mb_info);
+    //pmm_init((void *) mb_info);
     printf("Initialize GDT...\n");
-    gdt_init();
+    //gdt_init();
     printf("finished.\nInitialize IDT...\n");
     idt_init();
     printf("finished.\n");
