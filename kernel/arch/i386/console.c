@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h> //just for debugging
 
 #include "vga.h"
 #include "console.h"
@@ -115,8 +116,8 @@ uint16_t vga_entry(unsigned char c, uint8_t color){
 void kterminal_init(void){
     kterminal_setColor(vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK));
     clscr();
-    vid = (uint16_t*) 0xB8000;
-   }
+    vid = (uint16_t*) 0xC00B8000;
+}
 
 void kterminal_setColor(uint8_t color){
     terminal_color = color;
@@ -131,6 +132,7 @@ int kputchar(char c){
         if(++y == VGA_HEIGHT)
             scroll();
         x=0;
+	outb(0x03f8, '\n'); //serial interface emulator
     }
 
     else if(c == '\t'){
@@ -148,6 +150,7 @@ int kputchar(char c){
                 y--;
         }
         kputentryat(' ', terminal_color, x, y);
+	outb(0x03f8, ' '); //serial interface emulator
     }
 
     else if(c == '\f'){
@@ -169,6 +172,8 @@ int kputchar(char c){
 
     else{
         kputentryat(c, terminal_color, x, y);
+	outb(0x03f8, c); //serial interface emulator
+
         if(++x == VGA_WIDTH){
             x = 0;
             if(++y == VGA_HEIGHT)
@@ -184,7 +189,8 @@ int kputs(char *str){
     char *s = str;
     while(*s){
         if(*s == '\n'){
-            if(++y == VGA_HEIGHT)
+        outb(0x03f8, '\n'); //serial interface emulator
+	    if(++y == VGA_HEIGHT)
                 scroll();
             x=0;
             s++;
@@ -208,6 +214,8 @@ int kputs(char *str){
                     y--;
             }
             kputentryat(' ', terminal_color, x, y);
+	    outb(0x03f8, ' '); //serial interface emulator
+
             s++;
             continue;
         }
@@ -273,4 +281,5 @@ void scroll(void){
     memset(&video[160*24], 0x00, 160);
     x = 0;
     y--;
+
 }
