@@ -33,7 +33,7 @@ char *itoax(int in, char *ascii){
     int tmp;
     int id,d;
     char temp;
-    for(id=0; in>1; id++){
+    for(id=0; in>=1; id++){
         tmp = in % 16;
         if(tmp<10)
            ascii[id]=(char) (((int)'0') + tmp);
