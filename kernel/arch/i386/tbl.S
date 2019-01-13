@@ -1,10 +1,3 @@
-.section .data
-debtext1:
-.ascii "In tbl.S exception handler\n\0x0"
-
-debtext2:
-.ascii "In tbl.S irq handler\n\0x0"
-
 .section .text
 	
 /* 
@@ -100,9 +93,6 @@ exception_handler:
 	push %ebx
 	push %eax
 	
-	push debtext1
-	call printf
-
 	mov $0x10, %ax
 	mov %eax, %ds
 	mov %eax, %es
@@ -144,9 +134,6 @@ irq_handler:
 	push %ebx
 	push %eax
 	
-	push debtext2
-	call printf
-
 	mov $0x10, %ax
 	mov %eax, %ds
 	mov %eax, %es
