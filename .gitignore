@@ -13,3 +13,11 @@ isodir/
 *.o
 *.d
 *.iso
+*.kernel
+
+#Debug Files
+.sym
+.log
+
+#Other stuff
+.bak
