@@ -185,9 +185,7 @@ int kputchar(char c){
     return (int) c;
 }
 
-int kputs(char *str){
-    char *s = str;
-    while(*s){
+/*
         if(*s == '\n'){
         outb(0x03f8, '\n'); //serial interface emulator
 	    if(++y == VGA_HEIGHT)
@@ -245,6 +243,12 @@ int kputs(char *str){
 
         //TODO add implementation of \nnn \xhh \Uhhhhhhhh \uhhhh
 
+
+
+*/
+int kputs(char *str){
+    char *s = str;
+    while(*s){
         kputchar(*s);
         s++;
     }
@@ -257,8 +261,9 @@ int kputs(char *str){
 }
 
 void clscr(void){
-    
-    memset(vid, vga_entry(' ', terminal_color), VGA_WIDTH * 2 * VGA_HEIGHT);
+    int i;
+    for(i=0; i< VGA_WIDTH*VGA_HEIGHT; i++)
+    	vid[i] = vga_entry(' ', terminal_color);
     
     x = 0;
     y = 0;
@@ -275,11 +280,13 @@ void clline(void){
     kterminal_setCursor(x,y);
 }
 
+/* scrolls two lines */
 void scroll(void){
-    unsigned char *video = (unsigned char *) 0xb8000;
-    memcpy(video, &video[160], 160*24);
-    memset(&video[160*24], 0x00, 160);
+    memmove((void *) vid, (void *) &vid[VGA_WIDTH*2], (size_t) VGA_WIDTH*(VGA_HEIGHT-2)*2);
+    int i;
+    for(i=0; i<VGA_WIDTH*2; i++){
+	vid[VGA_WIDTH*(VGA_HEIGHT-2)+i] = vga_entry(' ', terminal_color);
+    }
     x = 0;
-    y--;
-
+    y = VGA_HEIGHT-2;
 }

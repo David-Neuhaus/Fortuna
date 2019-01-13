@@ -5,11 +5,45 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+char *utoa(uint32_t in, char *ascii){
+    uint32_t tmp;
+    int id=0,d;
+    char temp;
+    if(in == 0){
+	id++;
+	ascii[0]= '0';
+    }
+
+    for(; in>=1; id++){
+        tmp = in % 16;
+        ascii[id]=(char) (((int)'0') + tmp);
+        in = in/10;
+    } 
+
+    id--;
+    for(d=0; d<=id/2; d++){
+        temp = ascii[d];
+        ascii[d] = ascii[id-d];
+        ascii[id-d] = temp;
+    }
+    id++;
+    ascii[id]='\0';
+    return ascii;
+
+}
+
+
 char *utoax(uint32_t in, char *ascii){
     uint32_t tmp;
-    int id,d;
+    int id=0,d;
     char temp;
-    for(id=0; in>=1; id++){
+
+    if (in == 0){
+	id++;
+	ascii[0] = '0';
+    }
+    
+    for(; in>=1; id++){
         tmp = in % 16;
         if(tmp<10)
            ascii[id]=(char) (((int)'0') + tmp);
@@ -28,7 +62,9 @@ char *utoax(uint32_t in, char *ascii){
                 ascii[id]='f';
         }
         in = in/16;
-    } id--;
+    } 
+
+    id--;
     for(d=0; d<=id/2; d++){
         temp = ascii[d];
         ascii[d] = ascii[id-d];
@@ -54,6 +90,18 @@ int digitnum(int n){
     return 10; //max length for 32-bit integers
 }
 
+int digitnum_unsigned(uint32_t n){
+    if (n < 10) return 1;
+    if (n < 100) return 2;
+    if (n < 1000) return 3;
+    if (n < 10000) return 4;
+    if (n < 100000) return 5;
+    if (n < 1000000) return 6;
+    if (n < 10000000) return 7;
+    if (n < 100000000) return 8;
+    if (n < 1000000000) return 9;
+    return 10; //max length for 32-bit integers
+}
 int digitnumh(int n){
     if (n < 0x0) n = (n == INT_MIN) ? INT_MAX : -n;
     if (n < 0x10) return 1;
@@ -101,6 +149,21 @@ int printf(const char *in, ...){
                     h  = va_arg(args,int);
                     int digits = digitnum(h);
                     itoa(h, out, 10);
+		    out[digits] = '\0';
+                    index = 0;
+                    
+                    while(out[index] != '\0'){
+                        if(!putchar(out[index]))
+                            return -1;
+                        written++;
+                        index++;
+                        //outb(0x03f8, out[index]); //serial interface emulator
+                    }
+
+                } else if(in[i]=='u'){
+                    uint32_t val = va_arg(args,uint32_t);
+                    int digits = digitnum(h);
+                    utoa(val, out);
 		    out[digits] = '\0';
                     index = 0;
                     
