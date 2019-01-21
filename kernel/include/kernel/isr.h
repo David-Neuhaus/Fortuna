@@ -1,4 +1,30 @@
-char *err_msg[] =
+#ifndef ISR_H
+#define ISR_H
+
+/* Variable Definitions */
+
+char *irq_name[] =
+{
+"Programmable Interrupt Timer",
+"Keyboard",
+"Cascade (should not raise",
+"COM2",
+"COM1",
+"LPT2",
+"Floppy Disk",
+"LPT1 / spurious interrupt",
+"CMOS real-time clock",
+"Peripherals/SCSI/NIC",
+"Peripherals/SCSI/NIC",
+"Peripherals/SCSI/NIC",
+"PS2 Mouse",
+"FPU / Coprocessor / Inter-processor",
+"Primary ATA Hard Disk",
+"Secondary ATA Hard Disk"
+};
+
+
+char *exception_name[] =
 {
 "Division By Zero Exception",
 "Debug Exception",
@@ -93,4 +119,10 @@ char *err_msg[] =
 "Reservered"
 };
 
-struct cpu_state* handle_interrupt(struct cpu_state*);
+
+/* Functions */
+struct cpu_state* handle_exception(struct cpu_state*);
+struct cpu_state* handle_irq(struct cpu_state*);
+struct cpu_state* handle_syscall(struct cpu_state*);
+
+#endif /* ISR_H */

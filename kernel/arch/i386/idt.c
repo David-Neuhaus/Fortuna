@@ -72,9 +72,7 @@ static void load_idt(void){
 	};
 
 	idtp.pointer -= 0xC0000000; //higher kernel, we have to calculate it outside the definition, otherwise gcc optimizes it away somehow
-	printf("idtp at %p\n", (void *) &idtp);
-	printf("idt in pointer at %p and pointing to %p\n", (void *) &(idtp.pointer), (idtp.pointer));
-		asm volatile("lidt %0" : : "m" (idtp));
+	asm volatile("lidt %0" : : "m" (idtp));
 }
 
 static void init_pic(void){

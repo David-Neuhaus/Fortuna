@@ -75,13 +75,12 @@ intr_stub_irq 46
 intr_stub_irq 47
 
 /* Syscall */
-intr_stub 48
+intr_stub_sys 48
 
 /*
  * Save the registers, load the kernel data segments and call the exception handler.
  * After that return to the (user space?) program.
  */
-.extern printf
 .extern handle_exception
 exception_handler:
 
@@ -164,7 +163,7 @@ irq_handler:
  * After that return to the (user space?) program.
  */
 
-.extern handle_sys
+.extern handle_syscall
 sys_handler:
 
 	push %ebp
@@ -180,12 +179,12 @@ sys_handler:
 	mov %eax, %es
 
 	push %esp
-	call handle_sys
+	call handle_syscall
 	mov %eax, %esp
 	
-	mov $0x23, %ax
-	mov %ax, %ds
-	mov %ax, %es
+	//mov $0x23, %ax
+	//mov %ax, %ds
+	//mov %ax, %es
 
 	pop %eax
 	pop %ebx
