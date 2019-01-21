@@ -1,6 +1,7 @@
 1. pmm Manager fertigstellen
 2. vmm Manager fertigstellen + malloc & free
-3. Upper Kernel
+3. Upper Kernel with paging
+3a. Interrupt Stack Table
 4. Scheduler schreiben
 5. Keyboard Treiber schreiben
 6. disk driver, filesystem
